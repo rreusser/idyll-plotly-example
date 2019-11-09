@@ -16,7 +16,27 @@
     <link rel="stylesheet" href="static/idyll_styles.css" />
   </head>
   <body>
-    <div id="idyll-mount"><div data-reactroot=""><div class="idyll-root"><div class=" idyll-text-container"></div><div class="article-header" style="background:#222222;color:#ffffff"><h1 class="hed">My Idyll Post</h1><h2 class="dek">Welcome to Idyll. Open index.idyll to start writing</h2><div class="byline">By: <a href="https://idyll-lang.org">Your Name Here</a></div><div class="idyll-pub-date">Fri Nov 08 2019</div></div><div class=" idyll-text-container"><h2 id="introduction">Introduction</h2><p>This is a plot:</p><div></div></div></div></div></div>
+    <div id="idyll-mount"><div data-reactroot=""><div class="idyll-root"><div class=" idyll-text-container"></div><div class="article-header" style="background:#222222;color:#ffffff"><h1 class="hed">Idyll + Plotly.js Example</h1><h2 class="dek">One method for including Plotly.js plots in Idyll</h2><div class="byline">By: <a href="https://twitter.com/rickyreusser">Ricky Reusser</a></div><div class="idyll-pub-date">Fri Nov 08 2019</div></div><div></div><div class=" idyll-text-container"><h2 id="introduction">Introduction</h2><p>This project shows an example of including an <a href="http://plotly.com/">Plotly</a> plot in an <a href="https://idyll-lang.org/">Idyll</a> document.</p><h2 id="running-it">Running it</h2><p>To run the project, clone the repo and start the Idyll development server.</p><pre style="display:block;overflow-x:auto;padding:0.5em;color:#333;background:#f8f8f8"><code>npm update -g idyll
+git <span style="color:#0086b3">clone</span> git@github.com:rreusser/idyll-plotly-example.git
+<span style="color:#0086b3">cd</span> idyll-plotly-example
+npm install
+idyll</code></pre><h2 id="getting-a-plot">Getting a plot</h2><p>For portability, the fundamental representation of a Plotly plot is JSON. If the JSON represents a valid plot, then any way you can obtain it should work here. Below are a couple common solutions.</p><p>If you have a plot in the Plotly cloud, you can add <code>.json</code><span> to the URL, as in <a href="https://chart-studio.plot.ly/~rreusser/99.json">https://chart-studio.plot.ly/~rreusser/99.json</a> and place the resulting JSON in the </span><code>data/</code> directory of your Idyll project.</p><p>If you’re creating plots via the Plotly Python API, you can also use <code>fig.to_json()</code> to obtain the JSON representation of a plot.</p><p>Once you have data in your data directory, you may reference the data with a <code>data</code> element. For example if the data is in <code>data/plotData.json</code>, then you may include it with</p><pre><code>[data name:&#x27;plotData&#x27; source:&#x27;plotData.json&#x27;/]</code></pre><h2 id="drawing-the-plot">Drawing the plot</h2><p>There is a <a href="https://plot.ly/javascript/react/">Plotly.js React component</a>, but I had trouble getting it to work since server-side rendering fails if <code>document</code> is not defined. Instead, I defined a simple wrapper in <code>components/plot.js</code>:</p><pre style="display:block;overflow-x:auto;padding:0.5em;color:#333;background:#f8f8f8"><code><span style="color:#333;font-weight:bold">const</span> React = <span style="color:#0086b3">require</span>(<span style="color:#d14">&#x27;react&#x27;</span>);
+<span style="color:#333;font-weight:bold">const</span> PlotComponent = <span>(<span>(</span>) =&gt;</span> {
+  <span style="color:#333;font-weight:bold">try</span> {
+    <span style="color:#333;font-weight:bold">const</span> Plotly =  <span style="color:#0086b3">require</span>(<span style="color:#d14">&#x27;plotly.js/dist/plotly-basic.min.js&#x27;</span>);
+    <span style="color:#333;font-weight:bold">return</span> <span style="color:#0086b3">require</span>(<span style="color:#d14">&#x27;react-plotly.js/factory&#x27;</span>).default(Plotly);
+  } <span style="color:#333;font-weight:bold">catch</span> (e) { }
+})();
+
+<span><span style="color:#333;font-weight:bold">class</span> <span style="color:#900;font-weight:bold">Plot</span> <span style="color:#333;font-weight:bold">extends</span> <span style="color:#900;font-weight:bold">React</span>.<span style="color:#900;font-weight:bold">Component</span> </span>{
+  render() {
+    <span style="color:#333;font-weight:bold">return</span> PlotComponent ? &lt;PlotComponent {...this.props.data}/&gt; : &lt;div/&gt;;
+  }
+}
+
+module.exports = Plot;</code></pre><p>Finally, we can hook everything up with Idyll:</p><pre><code>[data name:&#x27;plotData&#x27; source:&#x27;plotData.json&#x27; /]
+
+[Plot data:plotData/]</code></pre><div></div></div></div></div></div>
     <script src="static/idyll_index.js"></script>
   </body>
 </html>
