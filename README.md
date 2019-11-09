@@ -34,21 +34,20 @@ There is a [Plotly.js React component](https://plot.ly/javascript/react/), but I
 
 ```jsx
 const React = require('react');
-var Plot
-try {
-  const Plotly =  require('plotly.js/dist/plotly-basic.min.js');
-  Plot = require('react-plotly.js/factory').default(Plotly);
-} catch (e) {
-  console.warn(e);
-}
+const PlotComponent = (() => {
+  try {
+    const Plotly =  require('plotly.js/dist/plotly-basic.min.js');
+    return require('react-plotly.js/factory').default(Plotly);
+  } catch (e) { }
+})();
 
-class PlotComponent extends React.Component {
+class Plot extends React.Component {
   render() {
-    return Plot ? <Plot {...this.props.data}/> : <div/>;
+    return PlotComponent ? <PlotComponent {...this.props.data}/> : <div/>;
   }
 }
 
-module.exports = PlotComponent;
+module.exports = Plot;
 ```
 
 Finally, we can hook everything up with Idyll:
