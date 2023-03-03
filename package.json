@@ -12,7 +12,7 @@
     "d3": "^4.0.0",
     "idyll": "^4.0.0",
     "idyll-d3-component": "^2.0.0",
-    "plotly.js": "^1.51.1",
+    "plotly.js": "^1.58.5",
     "react-plotly.js": "^2.4.0"
   },
   "devDependencies": {
